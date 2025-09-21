@@ -1,0 +1,2399 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏹 LOVCŮV SEN - Casino Empire Builder</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: 
+                radial-gradient(circle at 25% 25%, #1e40af 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, #7c3aed 0%, transparent 50%),
+                linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            min-height: 100vh;
+            color: white;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animované pozadí */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.1), transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255,215,0,0.1), transparent),
+                radial-gradient(1px 1px at 90px 40px, rgba(59,130,246,0.1), transparent);
+            animation: sparkle 20s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes sparkle {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(100px, -100px); }
+        }
+
+        /* Hlavní kontejner */
+        .game-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        /* Header - Idle game style */
+        .game-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border: 3px solid #fbbf24;
+            border-radius: 20px;
+            box-shadow: 
+                0 20px 40px rgba(0,0,0,0.5),
+                inset 0 2px 10px rgba(255,255,255,0.1),
+                0 0 80px rgba(251,191,36,0.2);
+        }
+
+        .game-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #fbbf24, #f59e0b, #d97706);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+            text-shadow: 0 0 30px rgba(251,191,36,0.5);
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
+        }
+
+        .game-subtitle {
+            color: #94a3b8;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        /* Top stats bar - Idle game style */
+        .top-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: linear-gradient(145deg, #2d3748, #1a202c);
+            border: 2px solid #4a5568;
+            border-radius: 15px;
+            box-shadow: inset 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .stat-card {
+            background: linear-gradient(145deg, #0f172a, #1e293b);
+            border: 2px solid #374151;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: #fbbf24;
+            box-shadow: 0 0 15px rgba(251,191,36,0.3);
+        }
+
+        .stat-card.credits {
+            border-color: #fbbf24;
+            box-shadow: 0 0 10px rgba(251,191,36,0.2);
+        }
+
+        .stat-card.level {
+            border-color: #a855f7;
+            box-shadow: 0 0 10px rgba(168,85,247,0.2);
+            position: relative;
+        }
+
+        /* Level progress bar */
+        .level-progress-bar {
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border: 1px solid #374151;
+            border-radius: 4px;
+            margin: 6px 0 4px 0;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .level-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #a855f7, #c084fc, #e879f9);
+            border-radius: 3px;
+            transition: width 0.8s ease-out;
+            box-shadow: 
+                0 0 8px rgba(168,85,247,0.6),
+                0 0 16px rgba(192,132,252,0.4);
+            animation: progressGlow 2s ease-in-out infinite alternate;
+            width: 0%;
+        }
+
+        @keyframes progressGlow {
+            0% { box-shadow: 0 0 8px rgba(168,85,247,0.6), 0 0 16px rgba(192,132,252,0.4); }
+            100% { box-shadow: 0 0 12px rgba(168,85,247,0.8), 0 0 24px rgba(192,132,252,0.6); }
+        }
+
+        .level-progress-text {
+            font-size: 0.6rem;
+            color: #c084fc;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .level-info {
+            font-size: 0.55rem;
+            color: #94a3b8;
+            text-align: center;
+            font-weight: 500;
+            line-height: 1.2;
+            opacity: 0.8;
+        }
+
+        .stat-card.net-worth {
+            border-color: #22c55e;
+            box-shadow: 0 0 10px rgba(34,197,94,0.2);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 1.6rem;
+            font-weight: 900;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            letter-spacing: 1px;
+        }
+
+        .stat-card.credits .stat-value {
+            color: #fbbf24;
+            text-shadow: 0 0 10px rgba(251,191,36,0.8);
+        }
+
+        .stat-card.level .stat-value {
+            color: #a855f7;
+            text-shadow: 0 0 10px rgba(168,85,247,0.8);
+        }
+
+        .stat-card.net-worth .stat-value {
+            color: #22c55e;
+            text-shadow: 0 0 10px rgba(34,197,94,0.8);
+        }
+
+        /* Main layout - 3x3 Grid s přesnými poměry */
+        .game-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 20px;
+            grid-template-areas:
+                "casino payout"
+                "business management";
+        }
+
+        .left-panel {
+            grid-area: casino;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .payout-table {
+            grid-area: payout;
+        }
+
+        .empire-panel {
+            grid-area: business;
+            height: 100%;
+        }
+
+        .management-panel {
+            grid-area: management;
+            height: 100%;
+        }
+
+        /* Zajištění stejné výšky pro dolní panely */
+        .empire-panel,
+        .management-panel {
+            display: flex;
+            flex-direction: column;
+            min-height: 0; /* Umožní flexboxu správně pracovat s výškou */
+        }
+
+        /* Business list s flexibilní výškou */
+        .business-list {
+            flex: 1;
+            max-height: none;
+            overflow-y: auto;
+            padding-right: 8px;
+            margin-bottom: 15px;
+        }
+
+        /* Stats panel s flexibilní výškou */
+        .stats-panel {
+            flex: 1;
+            max-height: none;
+            overflow-y: auto;
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border: 2px solid #4a5568;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+
+        /* Casino machine */
+        .casino-machine {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border: 3px solid #fbbf24;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 
+                0 20px 40px rgba(0,0,0,0.5),
+                inset 0 2px 10px rgba(255,255,255,0.1),
+                0 0 80px rgba(251,191,36,0.2);
+        }
+
+        .reels-container {
+            background: 
+                radial-gradient(ellipse at center, rgba(0,0,0,0.8), rgba(15,23,42,0.9)),
+                linear-gradient(145deg, rgba(30,41,59,0.3), rgba(15,23,42,0.6));
+            border: 2px solid rgba(251,191,36,0.4);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .result-display {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border: 3px solid #fbbf24;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #fbbf24;
+            text-shadow: 0 0 10px rgba(251,191,36,0.6);
+        }
+
+        .result-display.win {
+            border-color: #22c55e;
+            color: #22c55e;
+            text-shadow: 0 0 15px rgba(34,197,94,0.8);
+            animation: resultWin 0.6s ease-in-out 3;
+        }
+
+        .result-display.big-win {
+            border-color: #fbbf24;
+            color: #fbbf24;
+            font-size: 1.4rem;
+            text-shadow: 0 0 20px rgba(251,191,36,1);
+            animation: resultBigWin 0.4s ease-in-out 5;
+        }
+
+        @keyframes resultWin {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes resultBigWin {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.15) rotate(-1deg); }
+            75% { transform: scale(1.15) rotate(1deg); }
+        }
+
+        .reels {
+            display: flex;
+            justify-content: stretch;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .reel {
+            flex: 1;
+            height: 90px;
+            background: linear-gradient(145deg, #ffffff, #f1f5f9);
+            border: 2px solid #64748b;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            box-shadow: 
+                0 8px 20px rgba(0,0,0,0.3),
+                inset 0 2px 8px rgba(255,255,255,0.8);
+            transition: all 0.3s ease;
+        }
+
+        .reel.spinning {
+            animation: reelSpin 0.2s infinite;
+            border-color: #fbbf24;
+        }
+
+        .reel.winning {
+            border-color: #fbbf24;
+            box-shadow: 
+                0 0 25px rgba(251,191,36,0.8),
+                0 0 50px rgba(251,191,36,0.4),
+                inset 0 2px 8px rgba(255,255,255,0.8);
+            animation: winGlow 0.6s infinite alternate;
+        }
+
+        @keyframes reelSpin {
+            0% { transform: translateY(-10px); opacity: 0.8; }
+            50% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(10px); opacity: 0.8; }
+        }
+
+        @keyframes winGlow {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+
+        /* Controls */
+        .spin-controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .btn-primary {
+            flex: 2;
+            background: linear-gradient(145deg, #ef4444, #dc2626);
+            border: none;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 6px 15px rgba(239,68,68,0.3),
+                inset 0 2px 6px rgba(255,255,255,0.1);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(145deg, #dc2626, #b91c1c);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 10px 25px rgba(239,68,68,0.4),
+                inset 0 2px 6px rgba(255,255,255,0.1);
+        }
+
+        .btn-primary:disabled {
+            background: linear-gradient(145deg, #64748b, #475569);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-auto {
+            flex: 1;
+            background: linear-gradient(145deg, #8b5cf6, #7c3aed);
+            border: none;
+            color: white;
+            padding: 15px 18px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 5px 15px rgba(139,92,246,0.3),
+                inset 0 2px 6px rgba(255,255,255,0.1);
+        }
+
+        .btn-auto:hover {
+            background: linear-gradient(145deg, #7c3aed, #6d28d9);
+            transform: translateY(-2px);
+        }
+
+        .btn-auto.active {
+            background: linear-gradient(145deg, #ef4444, #dc2626);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        /* Bet controls */
+        .bet-controls {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding: 15px;
+            background: linear-gradient(145deg, #2d3748, #1a202c);
+            border: 2px solid #4a5568;
+            border-radius: 15px;
+            box-shadow: inset 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .quick-bet {
+            background: linear-gradient(145deg, #e53e3e, #c53030);
+            border: 2px solid #742a2a;
+            color: white;
+            padding: 10px 6px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 
+                0 4px 0 #9c1c1c,
+                0 6px 10px rgba(0,0,0,0.3),
+                inset 0 2px 4px rgba(255,255,255,0.2);
+        }
+
+        .quick-bet:hover {
+            background: linear-gradient(145deg, #f56565, #e53e3e);
+            transform: translateY(1px);
+            box-shadow: 
+                0 3px 0 #9c1c1c,
+                0 5px 8px rgba(0,0,0,0.4),
+                inset 0 2px 4px rgba(255,255,255,0.3);
+        }
+
+        .quick-bet:active {
+            transform: translateY(4px);
+            box-shadow: 
+                0 0 0 #9c1c1c,
+                0 2px 4px rgba(0,0,0,0.5),
+                inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .quick-bet.max {
+            background: linear-gradient(145deg, #ffd700, #ffb700);
+            border-color: #b8860b;
+            color: #2d3748;
+            box-shadow: 
+                0 4px 0 #daa520,
+                0 6px 10px rgba(255,215,0,0.3),
+                inset 0 2px 4px rgba(255,255,255,0.4);
+            animation: goldShine 2s infinite;
+        }
+
+        @keyframes goldShine {
+            0%, 100% { 
+                box-shadow: 
+                    0 4px 0 #daa520,
+                    0 6px 10px rgba(255,215,0,0.3),
+                    inset 0 2px 4px rgba(255,255,255,0.4);
+            }
+            50% { 
+                box-shadow: 
+                    0 4px 0 #daa520,
+                    0 6px 15px rgba(255,215,0,0.6),
+                    inset 0 2px 4px rgba(255,255,255,0.6);
+            }
+        }
+
+        /* Payout table - now half width */
+        .payout-table {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border: 3px solid #4a5568;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 
+                0 15px 30px rgba(0,0,0,0.3),
+                inset 0 2px 8px rgba(255,255,255,0.1);
+            flex: 1;
+        }
+
+        /* Bottom section container - REMOVED */
+
+        /* Business Quick Buy Panel - REMOVED */
+
+        .payout-title {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #fbbf24, #f59e0b, #d97706);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .payout-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            margin-bottom: 6px;
+            background: linear-gradient(145deg, #0f172a, #1e293b);
+            border: 1px solid #374151;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .payout-item:hover {
+            border-color: #fbbf24;
+            box-shadow: 0 0 10px rgba(251,191,36,0.2);
+        }
+
+        .payout-symbols {
+            display: flex;
+            gap: 5px;
+            font-size: 1.2rem;
+        }
+
+        .payout-multiplier {
+            font-weight: 800;
+            color: #fbbf24;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Right sidebar - Empire */
+        .empire-panel {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border: 3px solid #4a5568;
+            border-radius: 15px;
+            padding: 18px;
+            box-shadow: 
+                0 15px 30px rgba(0,0,0,0.3),
+                inset 0 2px 8px rgba(255,255,255,0.1);
+            height: fit-content;
+        }
+
+        .empire-title {
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #fbbf24, #f59e0b, #d97706);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Passive income display */
+        /* Passive income display s časomírou a animacemi */
+        .passive-income {
+            background: linear-gradient(145deg, #064e3b, #0f172a);
+            border: 2px solid #22c55e;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 15px;
+            text-align: center;
+            box-shadow: 0 0 12px rgba(34,197,94,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .passive-income.income-flash {
+            animation: incomeFlash 0.8s ease-out;
+            border-color: #fbbf24;
+            box-shadow: 0 0 25px rgba(251,191,36,0.6);
+        }
+
+        @keyframes incomeFlash {
+            0% { 
+                background: linear-gradient(145deg, #064e3b, #0f172a);
+                transform: scale(1);
+            }
+            20% { 
+                background: linear-gradient(145deg, #065f46, #1e293b);
+                transform: scale(1.02);
+            }
+            100% { 
+                background: linear-gradient(145deg, #064e3b, #0f172a);
+                transform: scale(1);
+            }
+        }
+
+        .passive-income-label {
+            font-size: 0.7rem;
+            color: #22c55e;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .passive-income-value {
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: #22c55e;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 8px rgba(34,197,94,0.6);
+            transition: all 0.3s ease;
+        }
+
+        .passive-income-timer {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(34,197,94,0.3);
+        }
+
+        .timer-label {
+            font-size: 0.6rem;
+            color: #16a34a;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .timer-value {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: #22c55e;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 6px;
+        }
+
+        .timer-progress-bar {
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border: 1px solid #374151;
+            border-radius: 3px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .timer-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #22c55e, #16a34a, #15803d);
+            border-radius: 2px;
+            transition: width 0.3s ease-out;
+            box-shadow: 
+                0 0 6px rgba(34,197,94,0.6),
+                0 0 12px rgba(22,163,74,0.4);
+            animation: progressPulse 2s ease-in-out infinite alternate;
+            width: 0%;
+        }
+
+        @keyframes progressPulse {
+            0% { box-shadow: 0 0 6px rgba(34,197,94,0.6), 0 0 12px rgba(22,163,74,0.4); }
+            100% { box-shadow: 0 0 10px rgba(34,197,94,0.8), 0 0 20px rgba(22,163,74,0.6); }
+        }
+
+        /* Floating income text animation */
+        .floating-income {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: 900;
+            font-size: 1.1rem;
+            color: #fbbf24;
+            text-shadow: 
+                0 0 10px rgba(251,191,36,0.8),
+                0 0 20px rgba(251,191,36,0.6);
+            pointer-events: none;
+            z-index: 100;
+            animation: floatUp 2s ease-out forwards;
+        }
+
+        @keyframes floatUp {
+            0% { 
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            20% { 
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+            100% { 
+                opacity: 0;
+                transform: translate(-50%, -80px) scale(0.9);
+            }
+        }
+
+        /* Business tabs */
+        .business-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 12px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: linear-gradient(145deg, #374151, #1f2937);
+            border: 2px solid #4b5563;
+            color: #d1d5db;
+            padding: 6px 3px;
+            border-radius: 6px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(145deg, #fbbf24, #f59e0b);
+            border-color: #d97706;
+            color: #1f2937;
+        }
+
+        .tab-btn:hover {
+            background: linear-gradient(145deg, #4b5563, #374151);
+        }
+
+        /* Business list */
+        .business-list {
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 8px;
+            margin-bottom: 15px;
+        }
+
+        .business-item {
+            background: linear-gradient(145deg, #0f172a, #1e293b);
+            border: 2px solid #374151;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .business-item:hover {
+            border-color: #fbbf24;
+            box-shadow: 0 0 12px rgba(251,191,36,0.2);
+        }
+
+        .business-item.owned {
+            border-color: #22c55e;
+            background: linear-gradient(145deg, #064e3b, #0f172a);
+            box-shadow: 0 0 8px rgba(34,197,94,0.2);
+        }
+
+        .business-item.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .business-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .business-name {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        .business-emoji {
+            font-size: 1rem;
+        }
+
+        .business-price {
+            font-weight: 800;
+            font-size: 0.7rem;
+            color: #fbbf24;
+        }
+
+        .business-income {
+            font-size: 0.7rem;
+            color: #22c55e;
+            font-weight: 600;
+        }
+
+        .business-description {
+            font-size: 0.6rem;
+            color: #94a3b8;
+            margin-bottom: 6px;
+        }
+
+        .business-level {
+            font-size: 0.6rem;
+            color: #a855f7;
+            font-weight: 600;
+        }
+
+        /* Statistics panel - MOVED TO MAIN LAYOUT SECTION */
+
+        .stats-title {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: #fbbf24;
+            margin-bottom: 8px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(100,116,139,0.2);
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: #e2e8f0;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Loans panel */
+        .loans-panel {
+            background: linear-gradient(145deg, #7c2d12, #1e293b);
+            border: 2px solid #dc2626;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+
+        .loans-title {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: #dc2626;
+            margin-bottom: 8px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .loan-btn {
+            width: 100%;
+            background: linear-gradient(145deg, #dc2626, #b91c1c);
+            border: 2px solid #991b1b;
+            color: white;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .loan-btn:hover {
+            background: linear-gradient(145deg, #ef4444, #dc2626);
+            transform: translateY(-1px);
+        }
+
+        /* Reset button */
+        .reset-btn {
+            width: 100%;
+            background: linear-gradient(145deg, #dc2626, #991b1b);
+            border: 2px solid #7f1d1d;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .reset-btn:hover {
+            background: linear-gradient(145deg, #ef4444, #dc2626);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(220,38,38,0.4);
+        }
+
+        /* Debug toggle button */
+        .debug-toggle-btn {
+            width: 100%;
+            background: linear-gradient(145deg, #374151, #1f2937);
+            border: 2px solid #4b5563;
+            color: #d1d5db;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .debug-toggle-btn:hover {
+            background: linear-gradient(145deg, #4b5563, #374151);
+            border-color: #6b7280;
+        }
+
+        .debug-toggle-btn.active {
+            background: linear-gradient(145deg, #fbbf24, #f59e0b);
+            border-color: #d97706;
+            color: #1f2937;
+        }
+
+        /* Debug panel */
+        .debug-panel {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out, opacity 0.3s ease-in-out;
+            opacity: 0;
+            background: linear-gradient(145deg, rgba(100,116,139,0.1), rgba(71,85,105,0.2));
+            border-radius: 8px;
+            margin-top: 5px;
+        }
+
+        .debug-panel.open {
+            max-height: 300px;
+            opacity: 1;
+        }
+
+        .debug-content {
+            padding: 12px;
+            border: 1px solid rgba(100,116,139,0.3);
+            border-radius: 6px;
+            margin: 2px;
+        }
+
+        /* Scrollbar styling */
+        .business-list::-webkit-scrollbar,
+        .stats-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .business-list::-webkit-scrollbar-track,
+        .stats-panel::-webkit-scrollbar-track {
+            background: rgba(15,23,42,0.8);
+            border-radius: 3px;
+        }
+
+        .business-list::-webkit-scrollbar-thumb,
+        .stats-panel::-webkit-scrollbar-thumb {
+            background: linear-gradient(145deg, #fbbf24, #f59e0b);
+            border-radius: 3px;
+        }
+
+        /* Responsive design pro 3x3 grid s poměrem 2:1 */
+        @media (max-width: 1400px) {
+            .game-layout {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto auto;
+                gap: 15px;
+                grid-template-areas:
+                    "casino"
+                    "payout" 
+                    "business"
+                    "management";
+            }
+            
+            /* Reset výšky pro mobile layout */
+            .empire-panel,
+            .management-panel {
+                height: auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .game-container {
+                padding: 8px;
+            }
+            
+            .game-title {
+                font-size: 2rem;
+            }
+            
+            .top-stats {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .bet-controls {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- Header -->
+        <div class="game-header">
+            <h1 class="game-title">🏹 LOVCŮV SEN</h1>
+            <p class="game-subtitle">Casino Empire Builder - Idle Clicker</p>
+        </div>
+
+        <!-- Top Stats Bar - Idle game style -->
+        <div class="top-stats">
+            <div class="stat-card credits">
+                <div class="stat-label">💰 KREDITY</div>
+                <div class="stat-value" id="credits">500</div>
+            </div>
+            <div class="stat-card level">
+                <div class="stat-label">⭐ LEVEL</div>
+                <div class="stat-value" id="playerLevel">1</div>
+                <div class="level-progress-bar">
+                    <div class="level-progress-fill" id="levelProgressFill"></div>
+                </div>
+                <div class="level-progress-text" id="levelProgressText">0 / 100 EXP</div>
+                <div class="level-info" id="levelInfo">💡 EXP z jackpotů a velkých výher</div>
+            </div>
+            <div class="stat-card net-worth">
+                <div class="stat-label">💎 CELKOVÝ MAJETEK</div>
+                <div class="stat-value" id="netWorth">500</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">🎰 CELKEM ZATOČENÍ</div>
+                <div class="stat-value" id="totalSpins">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">🏆 ÚSPĚŠNOST</div>
+                <div class="stat-value" id="winRate">0%</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">⏱️ ČAS HRANÍ</div>
+                <div class="stat-value" id="playTime">0 min</div>
+            </div>
+        </div>
+
+        /* Main game layout podle wireframe */
+        <div class="game-layout">
+            <!-- Levý horní - Casino automat -->
+            <div class="left-panel">
+                <!-- Casino machine -->
+                <div class="casino-machine">
+                    <div class="reels-container">
+                        <div class="result-display" id="resultDisplay">
+                            🎰 Připraveno k hře! 🎰
+                        </div>
+                        
+                        <div class="reels">
+                            <div class="reel" id="reel1">🍒</div>
+                            <div class="reel" id="reel2">🍇</div>
+                            <div class="reel" id="reel3">🍎</div>
+                        </div>
+
+                        <div class="spin-controls">
+                            <button class="btn-primary" id="spinBtn">
+                                Zatočit (25 Kč)
+                            </button>
+                            <button class="btn-auto" id="autoSpinBtn">
+                                🔄 Auto
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Bet controls -->
+                    <div class="bet-controls">
+                        <button class="quick-bet" data-bet="5">5 Kč</button>
+                        <button class="quick-bet" data-bet="25">25 Kč</button>
+                        <button class="quick-bet" data-bet="50">50 Kč</button>
+                        <button class="quick-bet" data-bet="100">100 Kč</button>
+                        <button class="quick-bet" data-bet="250">250 Kč</button>
+                        <button class="quick-bet max" id="maxBetBtn">MAX</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pravý horní - Payout Table -->
+            <div class="payout-table">
+                <div class="payout-title">💰 Výplatní tabulka</div>
+                <div class="payout-item">
+                    <div class="payout-symbols">
+                        <span>🍒🍒🍒</span>
+                    </div>
+                    <div class="payout-multiplier">10x sázka</div>
+                </div>
+                <div class="payout-item">
+                    <div class="payout-symbols">
+                        <span>🍇🍇🍇</span>
+                    </div>
+                    <div class="payout-multiplier">10x sázka</div>
+                </div>
+                <div class="payout-item">
+                    <div class="payout-symbols">
+                        <span>🍋🍋🍋</span>
+                    </div>
+                    <div class="payout-multiplier">10x sázka</div>
+                </div>
+                <div class="payout-item">
+                    <div class="payout-symbols">
+                        <span>🍊🍊🍊</span>
+                    </div>
+                    <div class="payout-multiplier">10x sázka</div>
+                </div>
+                <div class="payout-item">
+                    <div class="payout-symbols">
+                        <span>🍎🍎🍎</span>
+                    </div>
+                    <div class="payout-multiplier">10x sázka</div>
+                </div>
+                <div class="payout-item">
+                    <div class="payout-symbols">
+                        <span>🍓🍓🍓</span>
+                    </div>
+                    <div class="payout-multiplier">10x sázka</div>
+                </div>
+                <div class="payout-item">
+                    <div class="payout-symbols">
+                        <span>🍌🍌🍌</span>
+                    </div>
+                    <div class="payout-multiplier">10x sázka</div>
+                </div>
+                <div class="payout-item">
+                    <div class="payout-symbols">
+                        <span>XX</span>
+                    </div>
+                    <div class="payout-multiplier">2x sázka</div>
+                </div>
+            </div>
+
+            <!-- Levý dolní - Business Empire -->
+            <div class="empire-panel">
+                <h2 class="empire-title">🏢 BUSINESS EMPIRE</h2>
+                
+                <!-- Passive income display s časomírou -->
+                <div class="passive-income">
+                    <div class="passive-income-label">Pasivní příjem</div>
+                    <div class="passive-income-value" id="passiveIncome">0 Kč/min</div>
+                    <div class="passive-income-timer">
+                        <div class="timer-label">⏰ Další příjem za:</div>
+                        <div class="timer-value" id="passiveTimer">60s</div>
+                        <div class="timer-progress-bar">
+                            <div class="timer-progress-fill" id="timerProgressFill"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Business tabs -->
+                <div class="business-tabs">
+                    <button class="tab-btn active" data-tab="tier1">T1</button>
+                    <button class="tab-btn" data-tab="tier2">T2</button>
+                    <button class="tab-btn" data-tab="tier3">T3</button>
+                    <button class="tab-btn" data-tab="tier4">EMPIRE</button>
+                </div>
+
+                <!-- Business list -->
+                <div class="business-list" id="businessList">
+                    <!-- Businesses will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Pravý dolní - Game Management -->
+            <div class="management-panel empire-panel">
+                <h2 class="empire-title">📊 GAME MANAGEMENT</h2>
+
+                <!-- Statistics panel -->
+                <div class="stats-panel">
+                    <div class="stats-title">📊 Detailní Statistiky</div>
+                    <div class="stat-item">
+                        <span class="stat-label">Celkem vsázeno:</span>
+                        <span class="stat-value" id="totalBet">0 Kč</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Celkem vyhráno:</span>
+                        <span class="stat-value" id="totalWon">0 Kč</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Výhry celkem:</span>
+                        <span class="stat-value" id="totalWins">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Jackpotů:</span>
+                        <span class="stat-value" id="jackpots">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Největší výhra:</span>
+                        <span class="stat-value" id="biggestWin">0 Kč</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Průměrná sázka:</span>
+                        <span class="stat-value" id="avgBet">0 Kč</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">ROI:</span>
+                        <span class="stat-value" id="roi">0%</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Nejdelší série:</span>
+                        <span class="stat-value" id="maxWinStreak">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Aktuální série:</span>
+                        <span class="stat-value" id="currentStreak">0</span>
+                    </div>
+                </div>
+
+                <!-- Loans panel -->
+                <div class="loans-panel">
+                    <div class="loans-title">💰 Půjčky</div>
+                    <button class="loan-btn" data-loan="bank">
+                        🏦 Banka +1000 Kč (-10%)
+                    </button>
+                    <button class="loan-btn" data-loan="shark">
+                        💀 Lichvář +5000 Kč (-25%)
+                    </button>
+                    <div class="stat-item">
+                        <span class="stat-label">Dluh bance:</span>
+                        <span class="stat-value" id="bankDebt">0 Kč</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Dluh lichváři:</span>
+                        <span class="stat-value" id="sharkDebt">0 Kč</span>
+                    </div>
+                </div>
+
+                <!-- Reset & Debug panel -->
+                <button class="reset-btn" id="resetBtn">
+                    🔄 RESET PROGRESU
+                </button>
+                
+                <!-- Debug panel toggle button -->
+                <button class="debug-toggle-btn" id="debugToggleBtn">
+                    🔧 Debug nástroje ▼
+                </button>
+                
+                <!-- Debug panel (collapsible) -->
+                <div class="debug-panel" id="debugPanel">
+                    <div class="debug-content">
+                        <div style="color: #94a3b8; margin-bottom: 8px; font-weight: 600; text-align: center;">🔧 VÝVOJÁŘSKÉ NÁSTROJE</div>
+                        <button style="width: 100%; background: #374151; border: 1px solid #4b5563; color: #d1d5db; padding: 6px; border-radius: 4px; font-size: 0.7rem; margin-bottom: 6px; cursor: pointer; transition: all 0.2s ease;" id="testProgressBtn" onmouseover="this.style.background='#4b5563'" onmouseout="this.style.background='#374151'">
+                            📊 Simuluj progres pro test
+                        </button>
+                        <button style="width: 100%; background: #374151; border: 1px solid #4b5563; color: #d1d5db; padding: 6px; border-radius: 4px; font-size: 0.7rem; margin-bottom: 6px; cursor: pointer; transition: all 0.2s ease;" id="verifyResetBtn" onmouseover="this.style.background='#4b5563'" onmouseout="this.style.background='#374151'">
+                            ✅ Ověř reset funkci
+                        </button>
+                        <button style="width: 100%; background: #374151; border: 1px solid #4b5563; color: #d1d5db; padding: 6px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; transition: all 0.2s ease;" id="quickResetBtn" onmouseover="this.style.background='#4b5563'" onmouseout="this.style.background='#374151'">
+                            ⚡ Rychlý reset (bez potvrzení)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log('🎰 Lovcův Sen - Casino Empire Builder loading...');
+        
+        // Enhanced Sound System
+        let audioContext = null;
+        let soundEnabled = true;
+        
+        function initAudio() {
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            } catch (e) {
+                soundEnabled = false;
+            }
+        }
+        
+        function createOscillator(freq, type = 'sine') {
+            const oscillator = audioContext.createOscillator();
+            oscillator.type = type;
+            oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
+            return oscillator;
+        }
+        
+        function createGain(volume = 0.1) {
+            const gainNode = audioContext.createGain();
+            gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+            return gainNode;
+        }
+        
+        function playSound(type) {
+            if (!soundEnabled || !audioContext) return;
+            
+            try {
+                const currentTime = audioContext.currentTime;
+                
+                switch(type) {
+                    case 'spin':
+                        for (let i = 0; i < 3; i++) {
+                            const osc = createOscillator(100 + i * 30, 'sawtooth');
+                            const gain = createGain(0.03);
+                            osc.connect(gain);
+                            gain.connect(audioContext.destination);
+                            osc.frequency.linearRampToValueAtTime(120 + i * 30, currentTime + 0.5);
+                            gain.gain.exponentialRampToValueAtTime(0.001, currentTime + 1.2);
+                            osc.start(currentTime);
+                            osc.stop(currentTime + 1.2);
+                        }
+                        break;
+                        
+                    case 'bet':
+                        const coinOsc = createOscillator(1200, 'triangle');
+                        const coinGain = createGain(0.08);
+                        coinOsc.connect(coinGain);
+                        coinGain.connect(audioContext.destination);
+                        coinOsc.frequency.exponentialRampToValueAtTime(400, currentTime + 0.1);
+                        coinGain.gain.exponentialRampToValueAtTime(0.001, currentTime + 0.2);
+                        coinOsc.start(currentTime);
+                        coinOsc.stop(currentTime + 0.2);
+                        break;
+                        
+                    case 'win':
+                        const winFreqs = [523.25, 659.25, 783.99];
+                        winFreqs.forEach((freq, i) => {
+                            const bell = createOscillator(freq, 'sine');
+                            const bellGain = createGain(0.06);
+                            bell.connect(bellGain);
+                            bellGain.connect(audioContext.destination);
+                            bellGain.gain.setValueAtTime(0.06, currentTime + i * 0.1);
+                            bellGain.gain.exponentialRampToValueAtTime(0.001, currentTime + 1.0);
+                            bell.start(currentTime + i * 0.1);
+                            bell.stop(currentTime + 1.0);
+                        });
+                        break;
+                        
+                    case 'jackpot':
+                        const fanfareNotes = [523, 659, 784, 1047];
+                        fanfareNotes.forEach((freq, i) => {
+                            const trumpet = createOscillator(freq, 'sawtooth');
+                            const trumpetGain = createGain(0.08);
+                            trumpet.connect(trumpetGain);
+                            trumpetGain.connect(audioContext.destination);
+                            trumpetGain.gain.setValueAtTime(0.08, currentTime + i * 0.15);
+                            trumpetGain.gain.exponentialRampToValueAtTime(0.001, currentTime + i * 0.15 + 0.8);
+                            trumpet.start(currentTime + i * 0.15);
+                            trumpet.stop(currentTime + i * 0.15 + 0.8);
+                        });
+                        break;
+                        
+                    case 'lose':
+                        const loseOsc = createOscillator(220, 'sine');
+                        const loseGain = createGain(0.04);
+                        loseOsc.connect(loseGain);
+                        loseGain.connect(audioContext.destination);
+                        loseOsc.frequency.exponentialRampToValueAtTime(110, currentTime + 0.6);
+                        loseGain.gain.exponentialRampToValueAtTime(0.001, currentTime + 0.8);
+                        loseOsc.start(currentTime);
+                        loseOsc.stop(currentTime + 0.8);
+                        break;
+                        
+                    case 'buy':
+                        const registerBell = createOscillator(800, 'sine');
+                        const bellGain = createGain(0.08);
+                        registerBell.connect(bellGain);
+                        bellGain.connect(audioContext.destination);
+                        registerBell.frequency.linearRampToValueAtTime(1000, currentTime + 0.05);
+                        bellGain.gain.exponentialRampToValueAtTime(0.001, currentTime + 0.4);
+                        registerBell.start(currentTime);
+                        registerBell.stop(currentTime + 0.4);
+                        break;
+                        
+                    case 'income':
+                        const incomeOsc = createOscillator(800, 'sine');
+                        const incomeGain = createGain(0.06);
+                        incomeOsc.connect(incomeGain);
+                        incomeGain.connect(audioContext.destination);
+                        
+                        // Dvojité "ding-ding" pro pasivní příjem
+                        incomeOsc.frequency.setValueAtTime(800, currentTime);
+                        incomeOsc.frequency.setValueAtTime(1000, currentTime + 0.1);
+                        incomeGain.gain.setValueAtTime(0.06, currentTime);
+                        incomeGain.gain.exponentialRampToValueAtTime(0.001, currentTime + 0.3);
+                        
+                        // Druhý tón
+                        const incomeOsc2 = createOscillator(1200, 'sine');
+                        const incomeGain2 = createGain(0.04);
+                        incomeOsc2.connect(incomeGain2);
+                        incomeGain2.connect(audioContext.destination);
+                        incomeOsc2.start(currentTime + 0.15);
+                        incomeOsc2.stop(currentTime + 0.4);
+                        incomeGain2.gain.exponentialRampToValueAtTime(0.001, currentTime + 0.4);
+                        
+                        incomeOsc.start(currentTime);
+                        incomeOsc.stop(currentTime + 0.3);
+                        break;
+                }
+            } catch (e) {
+                // Chyba při přehrávání zvuku
+            }
+        }
+        
+        // Game state s časomírou
+        let gameState = {
+            credits: 500,
+            currentBet: 25,
+            playerLevel: 1,
+            playerExp: 0,
+            totalBet: 0,
+            totalWon: 0,
+            totalSpins: 0,
+            jackpots: 0,
+            spinning: false,
+            autoSpinning: false,
+            businesses: {},
+            passiveIncomeRate: 0,
+            bankDebt: 0,
+            sharkDebt: 0,
+            lastIncomeTime: Date.now(),
+            nextIncomeTime: Date.now() + 60000, // 60 sekund od teď
+            currentTab: 'tier1',
+            biggestWin: 0,
+            totalWins: 0,
+            winStreak: 0,
+            maxWinStreak: 0,
+            loseStreak: 0,
+            maxLoseStreak: 0,
+            gameStartTime: Date.now(),
+            pairs: 0,
+            triples: 0
+        };
+
+        // Slot symbols
+        const symbols = ['🍒', '🍇', '🍋', '🍊', '🍎', '🍓', '🍌'];
+        
+        // Business definitions
+        const businessTiers = {
+            tier1: [
+                { id: 'pizzeria', name: 'Pizzerie', emoji: '🍕', price: 100, income: 5, description: 'Malá rodinná pizzerie', levelReq: 1 },
+                { id: 'cafe', name: 'Kavárna', emoji: '☕', price: 300, income: 8, description: 'Útulná kavárna v centru', levelReq: 2 },
+                { id: 'carRental', name: 'Autopůjčovna', emoji: '🚗', price: 800, income: 12, description: 'Půjčovna osobních aut', levelReq: 3 },
+                { id: 'minimarket', name: 'Minimarket', emoji: '🏪', price: 1500, income: 15, description: 'Malý obchod se smíšeným zbožím', levelReq: 4 }
+            ],
+            tier2: [
+                { id: 'hotel', name: 'Hotel', emoji: '🏨', price: 10000, income: 50, description: 'Tříhvězdičkový hotel', levelReq: 8 },
+                { id: 'cinema', name: 'Kino', emoji: '🎬', price: 25000, income: 75, description: 'Multiplex kino', levelReq: 10 },
+                { id: 'gasStation', name: 'Čerpací stanice', emoji: '⛽', price: 40000, income: 100, description: 'Moderní čerpací stanice', levelReq: 12 },
+                { id: 'gym', name: 'Fitness centrum', emoji: '🏋️', price: 60000, income: 120, description: 'Velké fitness centrum', levelReq: 14 }
+            ],
+            tier3: [
+                { id: 'mall', name: 'Nákupní centrum', emoji: '🛒', price: 150000, income: 300, description: 'Velké nákupní centrum', levelReq: 20 },
+                { id: 'factory', name: 'Továrna', emoji: '🏭', price: 300000, income: 500, description: 'Výrobní závod', levelReq: 25 }
+            ],
+            tier4: [
+                { id: 'city', name: 'Vlastní město', emoji: '🏙️', price: 2000000, income: 5000, description: 'Celé město pod vaší kontrolou', levelReq: 50 }
+            ]
+        };
+        
+        let autoSpinInterval = null;
+        
+        // Experience and leveling functions
+        function getExpRequiredForLevel(level) {
+            return Math.floor(100 * Math.pow(1.5, level - 1));
+        }
+        
+        function getCurrentLevelExp() {
+            let totalExpForCurrentLevel = 0;
+            for (let i = 1; i < gameState.playerLevel; i++) {
+                totalExpForCurrentLevel += getExpRequiredForLevel(i);
+            }
+            return gameState.playerExp - totalExpForCurrentLevel;
+        }
+        
+        function getExpNeededForNextLevel() {
+            return getExpRequiredForLevel(gameState.playerLevel);
+        }
+        
+        function addExperience(amount, source = 'unknown') {
+            if (amount <= 0) return;
+            
+            gameState.playerExp += amount;
+            
+            let currentLevelExp = getCurrentLevelExp();
+            let expNeeded = getExpNeededForNextLevel();
+            
+            if (currentLevelExp >= expNeeded) {
+                gameState.playerLevel++;
+                
+                setTimeout(() => {
+                    const resultDisplay = document.getElementById('resultDisplay');
+                    if (resultDisplay) {
+                        resultDisplay.textContent = `🎉 LEVEL UP! Level ${gameState.playerLevel}!`;
+                        resultDisplay.className = 'result-display big-win';
+                    }
+                }, 2500);
+                
+                playSound('levelup');
+                
+                setTimeout(() => {
+                    populateBusinessList();
+                }, 100);
+                
+                setTimeout(() => {
+                    const resultDisplay = document.getElementById('resultDisplay');
+                    if (resultDisplay && resultDisplay.textContent.includes('LEVEL UP')) {
+                        resultDisplay.textContent = '🎰 Připraveno k hře! 🎰';
+                        resultDisplay.className = 'result-display';
+                    }
+                }, 5500);
+            }
+            
+            updateLevelDisplay();
+        }
+        
+        function updateLevelDisplay() {
+            const levelElement = document.getElementById('playerLevel');
+            const progressFillElement = document.getElementById('levelProgressFill');
+            const progressTextElement = document.getElementById('levelProgressText');
+            const levelInfoElement = document.getElementById('levelInfo');
+            
+            if (!levelElement || !progressFillElement || !progressTextElement || !levelInfoElement) {
+                return;
+            }
+            
+            const currentLevelExp = getCurrentLevelExp();
+            const expNeeded = getExpNeededForNextLevel();
+            const progressPercent = Math.min(100, (currentLevelExp / expNeeded) * 100);
+            
+            levelElement.textContent = gameState.playerLevel;
+            progressFillElement.style.width = progressPercent + '%';
+            progressTextElement.textContent = `${currentLevelExp} / ${expNeeded} EXP`;
+            
+            if (gameState.playerLevel < 5) {
+                levelInfoElement.textContent = '💡 EXP z jackpotů a velkých výher';
+            } else if (gameState.playerLevel < 15) {
+                levelInfoElement.textContent = '🎯 Pokračuj v hraní pro vyšší level!';
+            } else if (gameState.playerLevel < 30) {
+                levelInfoElement.textContent = '🏆 Pokročilý hráč - skvělá práce!';
+            } else if (gameState.playerLevel < 50) {
+                levelInfoElement.textContent = '👑 Expert na automaty!';
+            } else {
+                levelInfoElement.textContent = '🌟 LEGEND! Jsi mistr hry!';
+            }
+        }
+        
+        // Core game functions
+        function updateDisplay() {
+            document.getElementById('credits').textContent = gameState.credits.toLocaleString();
+            document.getElementById('netWorth').textContent = calculateNetWorth().toLocaleString();
+            document.getElementById('totalSpins').textContent = gameState.totalSpins.toLocaleString();
+            document.getElementById('totalBet').textContent = gameState.totalBet.toLocaleString() + ' Kč';
+            document.getElementById('totalWon').textContent = gameState.totalWon.toLocaleString() + ' Kč';
+            document.getElementById('spinBtn').textContent = `Zatočit (${gameState.currentBet} Kč)`;
+            document.getElementById('passiveIncome').textContent = gameState.passiveIncomeRate.toLocaleString() + ' Kč/min';
+            document.getElementById('bankDebt').textContent = gameState.bankDebt.toLocaleString() + ' Kč';
+            document.getElementById('sharkDebt').textContent = gameState.sharkDebt.toLocaleString() + ' Kč';
+            document.getElementById('jackpots').textContent = gameState.jackpots.toLocaleString();
+            
+            updateLevelDisplay();
+            
+            document.getElementById('totalWins').textContent = gameState.totalWins.toLocaleString();
+            document.getElementById('biggestWin').textContent = gameState.biggestWin.toLocaleString() + ' Kč';
+            
+            const winRate = gameState.totalSpins > 0 ? ((gameState.totalWins / gameState.totalSpins) * 100).toFixed(1) : 0;
+            document.getElementById('winRate').textContent = winRate + '%';
+            
+            const avgBet = gameState.totalSpins > 0 ? Math.floor(gameState.totalBet / gameState.totalSpins) : 0;
+            document.getElementById('avgBet').textContent = avgBet.toLocaleString() + ' Kč';
+            
+            const roi = gameState.totalBet > 0 ? (((gameState.totalWon - gameState.totalBet) / gameState.totalBet) * 100).toFixed(1) : 0;
+            document.getElementById('roi').textContent = roi + '%';
+            document.getElementById('roi').style.color = roi >= 0 ? '#22c55e' : '#ef4444';
+            
+            document.getElementById('maxWinStreak').textContent = gameState.maxWinStreak.toLocaleString();
+            const currentStreakType = gameState.winStreak > 0 ? 'W' : (gameState.loseStreak > 0 ? 'L' : '0');
+            const currentStreakValue = Math.max(gameState.winStreak, gameState.loseStreak);
+            document.getElementById('currentStreak').textContent = currentStreakValue + currentStreakType;
+            document.getElementById('currentStreak').style.color = gameState.winStreak > 0 ? '#22c55e' : (gameState.loseStreak > 0 ? '#ef4444' : '#94a3b8');
+            
+            const playTime = Math.floor((Date.now() - gameState.gameStartTime) / 1000 / 60);
+            document.getElementById('playTime').textContent = playTime.toLocaleString() + ' min';
+        }
+        
+        function calculateNetWorth() {
+            let businessValue = 0;
+            Object.keys(gameState.businesses).forEach(businessId => {
+                const business = findBusinessById(businessId);
+                if (business) {
+                    businessValue += business.price * gameState.businesses[businessId];
+                }
+            });
+            return gameState.credits + businessValue - gameState.bankDebt - gameState.sharkDebt;
+        }
+        
+        function findBusinessById(id) {
+            for (const tier of Object.values(businessTiers)) {
+                const business = tier.find(b => b.id === id);
+                if (business) return business;
+            }
+            return null;
+        }
+        
+        function calculatePassiveIncome() {
+            let totalIncome = 0;
+            Object.keys(gameState.businesses).forEach(businessId => {
+                const business = findBusinessById(businessId);
+                if (business) {
+                    totalIncome += business.income * gameState.businesses[businessId];
+                }
+            });
+            gameState.passiveIncomeRate = totalIncome;
+        }
+        
+        function createFloatingIncomeText(amount, element) {
+            const floatingText = document.createElement('div');
+            floatingText.className = 'floating-income';
+            floatingText.textContent = `+${amount} Kč`;
+            
+            element.style.position = 'relative';
+            element.appendChild(floatingText);
+            
+            setTimeout(() => {
+                if (floatingText.parentNode) {
+                    floatingText.parentNode.removeChild(floatingText);
+                }
+            }, 2000);
+        }
+        
+        function updatePassiveIncomeTimer() {
+            const timerElement = document.getElementById('passiveTimer');
+            const progressElement = document.getElementById('timerProgressFill');
+            
+            if (!timerElement || !progressElement) return;
+            
+            const now = Date.now();
+            const timeLeft = Math.max(0, gameState.nextIncomeTime - now);
+            const totalTime = 60000; // 60 sekund
+            const progress = Math.max(0, ((totalTime - timeLeft) / totalTime) * 100);
+            
+            const secondsLeft = Math.ceil(timeLeft / 1000);
+            timerElement.textContent = `${secondsLeft}s`;
+            progressElement.style.width = `${progress}%`;
+            
+            // Změna barvy když se blíží konec
+            if (secondsLeft <= 10) {
+                timerElement.style.color = '#fbbf24';
+                progressElement.style.background = 'linear-gradient(90deg, #fbbf24, #f59e0b, #d97706)';
+            } else {
+                timerElement.style.color = '#22c55e';
+                progressElement.style.background = 'linear-gradient(90deg, #22c55e, #16a34a, #15803d)';
+            }
+        }
+        
+        function updatePassiveIncome() {
+            const now = Date.now();
+            
+            // Update časomíry
+            updatePassiveIncomeTimer();
+            
+            // Zkontroluj, jestli je čas na příjem
+            if (now >= gameState.nextIncomeTime && gameState.passiveIncomeRate > 0) {
+                const income = gameState.passiveIncomeRate;
+                
+                if (income > 0) {
+                    // Přičti kredity
+                    gameState.credits += income;
+                    
+                    // Zvukový feedback
+                    playSound('income');
+                    
+                    // Vizuální feedback
+                    const passiveIncomeElement = document.querySelector('.passive-income');
+                    if (passiveIncomeElement) {
+                        passiveIncomeElement.classList.add('income-flash');
+                        createFloatingIncomeText(income, passiveIncomeElement);
+                        
+                        setTimeout(() => {
+                            passiveIncomeElement.classList.remove('income-flash');
+                        }, 800);
+                    }
+                    
+                    // Nastavit další čas příjmu
+                    gameState.nextIncomeTime = now + 60000; // další minutu
+                    gameState.lastIncomeTime = now;
+                    
+                    updateDisplay();
+                }
+            }
+        }
+        
+        function spin() {
+            if (gameState.spinning) {
+                return;
+            }
+            
+            if (gameState.credits < gameState.currentBet) {
+                document.getElementById('resultDisplay').textContent = '😢 Nedostatek kreditů!';
+                playSound('lose');
+                return;
+            }
+            
+            playSound('spin');
+            
+            gameState.spinning = true;
+            gameState.credits -= gameState.currentBet;
+            gameState.totalBet += gameState.currentBet;
+            gameState.totalSpins++;
+            
+            updateDisplay();
+            
+            const reel1 = document.getElementById('reel1');
+            const reel2 = document.getElementById('reel2');
+            const reel3 = document.getElementById('reel3');
+            const spinBtn = document.getElementById('spinBtn');
+            
+            spinBtn.disabled = true;
+            spinBtn.textContent = 'TOČÍ SE...';
+            
+            document.getElementById('resultDisplay').textContent = '🎰 Točí se válce... 🎰';
+            
+            reel1.classList.add('spinning');
+            reel2.classList.add('spinning');
+            reel3.classList.add('spinning');
+            
+            let counter = 0;
+            const spinInterval = setInterval(() => {
+                reel1.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                reel2.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                reel3.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                counter++;
+                
+                if (counter >= 20) {
+                    clearInterval(spinInterval);
+                    
+                    const result1 = symbols[Math.floor(Math.random() * symbols.length)];
+                    const result2 = symbols[Math.floor(Math.random() * symbols.length)];
+                    const result3 = symbols[Math.floor(Math.random() * symbols.length)];
+                    
+                    reel1.textContent = result1;
+                    reel2.textContent = result2;
+                    reel3.textContent = result3;
+                    
+                    reel1.classList.remove('spinning');
+                    reel2.classList.remove('spinning');
+                    reel3.classList.remove('spinning');
+                    
+                    checkWin([result1, result2, result3]);
+                    
+                    spinBtn.disabled = false;
+                    spinBtn.textContent = `Zatočit (${gameState.currentBet} Kč)`;
+                    gameState.spinning = false;
+                    
+                    updateDisplay();
+                }
+            }, 100);
+        }
+        
+        function checkWin(results) {
+            const [result1, result2, result3] = results;
+            const reels = [
+                document.getElementById('reel1'),
+                document.getElementById('reel2'),
+                document.getElementById('reel3')
+            ];
+            
+            let winAmount = 0;
+            let message = '';
+            let isWin = false;
+            let expGained = 0;
+            
+            if (result1 === result2 && result2 === result3) {
+                winAmount = gameState.currentBet * 10;
+                expGained = 50;
+                gameState.jackpots++;
+                gameState.triples++;
+                message = `🎰 JACKPOT! Výhra ${winAmount} Kč! +${expGained} EXP 🎰`;
+                reels.forEach(reel => reel.classList.add('winning'));
+                isWin = true;
+                playSound('jackpot');
+            } else if (result1 === result2 || result2 === result3 || result1 === result3) {
+                winAmount = gameState.currentBet * 2;
+                expGained = gameState.currentBet >= 100 ? 15 : 10;
+                gameState.pairs++;
+                message = `✨ Dvojice! Výhra ${winAmount} Kč! +${expGained} EXP`;
+                if (result1 === result2) {
+                    reels[0].classList.add('winning');
+                    reels[1].classList.add('winning');
+                } else if (result2 === result3) {
+                    reels[1].classList.add('winning');
+                    reels[2].classList.add('winning');
+                } else {
+                    reels[0].classList.add('winning');
+                    reels[2].classList.add('winning');
+                }
+                isWin = true;
+                playSound('win');
+            } else {
+                message = '😔 Žádná výhra';
+                isWin = false;
+                playSound('lose');
+            }
+            
+            if (isWin) {
+                gameState.totalWins++;
+                gameState.winStreak++;
+                gameState.loseStreak = 0;
+                
+                if (winAmount > gameState.biggestWin) {
+                    gameState.biggestWin = winAmount;
+                }
+                
+                if (gameState.winStreak > gameState.maxWinStreak) {
+                    gameState.maxWinStreak = gameState.winStreak;
+                }
+                
+                gameState.credits += winAmount;
+                gameState.totalWon += winAmount;
+                
+                addExperience(expGained, isWin ? (winAmount >= gameState.currentBet * 5 ? 'jackpot' : 'pair') : 'none');
+            } else {
+                gameState.loseStreak++;
+                gameState.winStreak = 0;
+                
+                if (gameState.loseStreak > gameState.maxLoseStreak) {
+                    gameState.maxLoseStreak = gameState.loseStreak;
+                }
+            }
+            
+            document.getElementById('resultDisplay').textContent = message;
+            document.getElementById('resultDisplay').className = `result-display ${isWin ? (winAmount >= gameState.currentBet * 5 ? 'big-win' : 'win') : ''}`;
+            
+            setTimeout(() => {
+                reels.forEach(reel => reel.classList.remove('winning'));
+            }, 2000);
+            
+            setTimeout(() => {
+                const resultDisplay = document.getElementById('resultDisplay');
+                if (resultDisplay && !resultDisplay.textContent.includes('LEVEL UP')) {
+                    resultDisplay.textContent = '🎰 Připraveno k hře! 🎰';
+                    resultDisplay.className = 'result-display';
+                }
+            }, 4000);
+        }
+        
+        function toggleAutoSpin() {
+            const autoSpinBtn = document.getElementById('autoSpinBtn');
+            
+            if (!gameState.autoSpinning) {
+                if (gameState.credits < gameState.currentBet) {
+                    document.getElementById('resultDisplay').textContent = '😢 Nedostatek kreditů pro auto spin!';
+                    return;
+                }
+                
+                gameState.autoSpinning = true;
+                autoSpinBtn.textContent = '⏹️ Stop';
+                autoSpinBtn.classList.add('active');
+                
+                if (!gameState.spinning) {
+                    spin();
+                }
+                
+                autoSpinInterval = setInterval(() => {
+                    if (!gameState.autoSpinning) {
+                        clearInterval(autoSpinInterval);
+                        autoSpinInterval = null;
+                        return;
+                    }
+                    
+                    if (gameState.credits >= gameState.currentBet && !gameState.spinning) {
+                        spin();
+                    } else if (gameState.credits < gameState.currentBet) {
+                        stopAutoSpin();
+                        document.getElementById('resultDisplay').textContent = '😢 Auto spin zastaven - nedostatek kreditů!';
+                    }
+                }, 4000);
+                
+            } else {
+                stopAutoSpin();
+            }
+        }
+
+        function stopAutoSpin() {
+            gameState.autoSpinning = false;
+            
+            if (autoSpinInterval) {
+                clearInterval(autoSpinInterval);
+                autoSpinInterval = null;
+            }
+            
+            const autoSpinBtn = document.getElementById('autoSpinBtn');
+            autoSpinBtn.textContent = '🔄 Auto';
+            autoSpinBtn.classList.remove('active');
+        }
+        
+        function setBet(amount) {
+            if (gameState.spinning || amount > gameState.credits) return;
+            gameState.currentBet = amount;
+            playSound('bet');
+            updateDisplay();
+        }
+
+        function maxBet() {
+            if (gameState.spinning) return;
+            gameState.currentBet = 500; // Vždy nastaví na 500 kreditů
+            playSound('bet');
+            updateDisplay();
+        }
+        
+        function populateBusinessList() {
+            const businessList = document.getElementById('businessList');
+            if (businessList) {
+                businessList.innerHTML = '';
+                const businesses = businessTiers[gameState.currentTab];
+                
+                businesses.forEach(business => {
+                    const businessElement = createBusinessElement(business);
+                    businessList.appendChild(businessElement);
+                });
+            }
+        }
+
+        function createBusinessElement(business) {
+            const owned = gameState.businesses[business.id] || 0;
+            const canAfford = gameState.credits >= business.price;
+            const levelUnlocked = gameState.playerLevel >= business.levelReq;
+            
+            const element = document.createElement('div');
+            element.className = `business-item ${owned > 0 ? 'owned' : ''} ${!levelUnlocked ? 'locked' : ''}`;
+            
+            const multiplier = owned > 0 ? Math.pow(1.15, owned - 1) : 1;
+            const currentPrice = Math.floor(business.price * multiplier);
+            
+            element.innerHTML = `
+                <div class="business-header">
+                    <div class="business-name">
+                        <span class="business-emoji">${business.emoji}</span>
+                        <span>${business.name}</span>
+                    </div>
+                    <div class="business-price">${currentPrice.toLocaleString()} Kč</div>
+                </div>
+                <div class="business-description">${business.description}</div>
+                <div class="business-income">
+                    ${business.income.toLocaleString()} Kč/min ${owned > 0 ? `(Vlastníte: ${owned})` : ''}
+                </div>
+                ${!levelUnlocked ? `<div class="business-level">Vyžaduje level ${business.levelReq}</div>` : ''}
+            `;
+            
+            if (levelUnlocked && canAfford) {
+                element.addEventListener('click', () => buyBusiness(business.id));
+            }
+            
+            return element;
+        }
+
+        function buyBusiness(businessId) {
+            const business = findBusinessById(businessId);
+            if (!business) return;
+            
+            const owned = gameState.businesses[businessId] || 0;
+            const multiplier = owned > 0 ? Math.pow(1.15, owned) : 1;
+            const price = Math.floor(business.price * multiplier);
+            
+            if (gameState.credits >= price && gameState.playerLevel >= business.levelReq) {
+                gameState.credits -= price;
+                gameState.businesses[businessId] = owned + 1;
+                
+                playSound('buy');
+                calculatePassiveIncome();
+                updateDisplay();
+                populateBusinessList();
+                
+                document.getElementById('resultDisplay').textContent = `✅ Koupili jste ${business.name}!`;
+                setTimeout(() => {
+                    document.getElementById('resultDisplay').textContent = '🎰 Připraveno k hře! 🎰';
+                    document.getElementById('resultDisplay').className = 'result-display';
+                }, 2000);
+            }
+        }
+
+        function switchTab(tab) {
+            gameState.currentTab = tab;
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+            
+            populateBusinessList();
+        }
+        
+        function takeLoan(type) {
+            if (type === 'bank') {
+                gameState.credits += 1000;
+                gameState.bankDebt += 1100;
+                document.getElementById('resultDisplay').textContent = '🏦 Půjčka z banky přijata! +1000 Kč';
+                playSound('buy');
+            } else if (type === 'shark') {
+                gameState.credits += 5000;
+                gameState.sharkDebt += 6250;
+                document.getElementById('resultDisplay').textContent = '💀 Lichvářská půjčka přijata! +5000 Kč';
+                playSound('buy');
+            }
+            
+            updateDisplay();
+            setTimeout(() => {
+                document.getElementById('resultDisplay').textContent = '🎰 Připraveno k hře! 🎰';
+                document.getElementById('resultDisplay').className = 'result-display';
+            }, 3000);
+        }
+        
+        function resetProgress() {
+            console.log('🔄 Reset progress called - executing immediate reset');
+            quickReset();
+        }
+        
+        function resetUIToInitialState() {
+            console.log('🎨 Resetting UI to initial state...');
+            
+            document.getElementById('reel1').textContent = '🍒';
+            document.getElementById('reel2').textContent = '🍇';
+            document.getElementById('reel3').textContent = '🍎';
+            
+            document.querySelectorAll('.reel').forEach(reel => {
+                reel.classList.remove('winning', 'spinning');
+            });
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector('[data-tab="tier1"]').classList.add('active');
+            
+            const spinBtn = document.getElementById('spinBtn');
+            spinBtn.disabled = false;
+            spinBtn.textContent = 'Zatočit (25 Kč)';
+            
+            const autoSpinBtn = document.getElementById('autoSpinBtn');
+            autoSpinBtn.textContent = '🔄 Auto';
+            autoSpinBtn.classList.remove('active');
+            
+            document.getElementById('resultDisplay').textContent = '🎰 Připraveno k hře! 🎰';
+            document.getElementById('resultDisplay').className = 'result-display';
+            
+            console.log('✅ UI reset complete');
+        }
+        
+        function simulateProgress() {
+            console.log('🎮 Simulating game progress for testing...');
+            
+            gameState.credits = 75000;
+            gameState.playerLevel = 30;
+            gameState.playerExp = 25000;
+            gameState.totalSpins = 2500;
+            gameState.totalBet = 125000;
+            gameState.totalWon = 95000;
+            gameState.jackpots = 15;
+            gameState.biggestWin = 12500;
+            gameState.totalWins = 850;
+            gameState.maxWinStreak = 25;
+            
+            gameState.businesses = {
+                'pizzeria': 10,
+                'cafe': 8,
+                'carRental': 5,
+                'hotel': 3,
+                'cinema': 2
+            };
+            
+            gameState.bankDebt = 15000;
+            gameState.sharkDebt = 8000;
+            
+            calculatePassiveIncome();
+            populateBusinessList();
+            updateDisplay();
+            
+            document.getElementById('resultDisplay').textContent = '🎮 SIMULOVANÝ PROGRES PŘIDÁN!';
+            setTimeout(() => {
+                document.getElementById('resultDisplay').textContent = '🎰 Připraveno k hře! 🎰';
+                document.getElementById('resultDisplay').className = 'result-display';
+            }, 3000);
+            
+            console.log('✅ Progress simulated. Current state:', gameState);
+        }
+        
+        function verifyReset() {
+            console.log('🔍 Verifying reset worked correctly...');
+            
+            const initialState = {
+                credits: 500,
+                currentBet: 25,
+                playerLevel: 1,
+                playerExp: 0,
+                totalBet: 0,
+                totalWon: 0,
+                totalSpins: 0,
+                jackpots: 0,
+                spinning: false,
+                autoSpinning: false,
+                businesses: {},
+                passiveIncomeRate: 0,
+                bankDebt: 0,
+                sharkDebt: 0,
+                biggestWin: 0,
+                totalWins: 0,
+                winStreak: 0,
+                maxWinStreak: 0,
+                loseStreak: 0,
+                maxLoseStreak: 0,
+                pairs: 0,
+                triples: 0
+            };
+            
+            let allCorrect = true;
+            const issues = [];
+            
+            Object.keys(initialState).forEach(key => {
+                if (key === 'lastIncomeTime' || key === 'gameStartTime' || key === 'currentTab') {
+                    return;
+                }
+                
+                if (JSON.stringify(gameState[key]) !== JSON.stringify(initialState[key])) {
+                    allCorrect = false;
+                    issues.push(`${key}: expected ${JSON.stringify(initialState[key])}, got ${JSON.stringify(gameState[key])}`);
+                }
+            });
+            
+            const reel1 = document.getElementById('reel1').textContent;
+            const reel2 = document.getElementById('reel2').textContent;
+            const reel3 = document.getElementById('reel3').textContent;
+            
+            if (reel1 !== '🍒' || reel2 !== '🍇' || reel3 !== '🍎') {
+                allCorrect = false;
+                issues.push(`Reels not reset: ${reel1}, ${reel2}, ${reel3}`);
+            }
+            
+            const savedData = localStorage.getItem('lovcuvSenSave');
+            if (savedData !== null) {
+                allCorrect = false;
+                issues.push('localStorage not cleared');
+            }
+            
+            if (allCorrect) {
+                console.log('✅ RESET VERIFICATION PASSED! All values correctly reset.');
+                document.getElementById('resultDisplay').textContent = '✅ RESET OVĚŘEN - VŠE V POŘÁDKU!';
+                document.getElementById('resultDisplay').className = 'result-display win';
+            } else {
+                console.log('❌ RESET VERIFICATION FAILED! Issues found:');
+                issues.forEach(issue => console.log('  - ' + issue));
+                document.getElementById('resultDisplay').textContent = '❌ CHYBA V RESETU - ZKONTROLUJ KONZOLI!';
+                document.getElementById('resultDisplay').className = 'result-display';
+            }
+            
+            setTimeout(() => {
+                document.getElementById('resultDisplay').textContent = '🎰 Připraveno k hře! 🎰';
+                document.getElementById('resultDisplay').className = 'result-display';
+            }, 4000);
+            
+            return allCorrect;
+        }
+        
+        function quickReset() {
+            console.log('⚡ Quick reset (no confirmation)...');
+            
+            stopAutoSpin();
+            
+            if (autoSpinInterval) {
+                clearInterval(autoSpinInterval);
+                autoSpinInterval = null;
+            }
+            
+            gameState = {
+                credits: 500,
+                currentBet: 25,
+                playerLevel: 1,
+                playerExp: 0,
+                totalBet: 0,
+                totalWon: 0,
+                totalSpins: 0,
+                jackpots: 0,
+                spinning: false,
+                autoSpinning: false,
+                businesses: {},
+                passiveIncomeRate: 0,
+                bankDebt: 0,
+                sharkDebt: 0,
+                lastIncomeTime: Date.now(),
+                nextIncomeTime: Date.now() + 60000,
+                currentTab: 'tier1',
+                biggestWin: 0,
+                totalWins: 0,
+                winStreak: 0,
+                maxWinStreak: 0,
+                loseStreak: 0,
+                maxLoseStreak: 0,
+                gameStartTime: Date.now(),
+                pairs: 0,
+                triples: 0
+            };
+            
+            try {
+                localStorage.removeItem('lovcuvSenSave');
+            } catch (e) {
+                console.log('⚠️ Could not clear save:', e);
+            }
+            
+            resetUIToInitialState();
+            
+            calculatePassiveIncome();
+            populateBusinessList();
+            updateDisplay();
+            
+            document.getElementById('resultDisplay').textContent = '⚡ RYCHLÝ RESET DOKONČEN!';
+            setTimeout(() => {
+                document.getElementById('resultDisplay').textContent = '🎰 Připraveno k hře! 🎰';
+                document.getElementById('resultDisplay').className = 'result-display';
+            }, 2000);
+            
+            console.log('✅ Quick reset complete');
+        }
+        
+        function toggleDebugPanel() {
+            const debugPanel = document.getElementById('debugPanel');
+            const debugToggleBtn = document.getElementById('debugToggleBtn');
+            
+            if (debugPanel.classList.contains('open')) {
+                debugPanel.classList.remove('open');
+                debugToggleBtn.classList.remove('active');
+                debugToggleBtn.textContent = '🔧 Debug nástroje ▼';
+                console.log('🔧 Debug panel closed');
+            } else {
+                debugPanel.classList.add('open');
+                debugToggleBtn.classList.add('active');
+                debugToggleBtn.textContent = '🔧 Debug nástroje ▲';
+                console.log('🔧 Debug panel opened');
+            }
+        }
+        
+        function saveGame() {
+            try {
+                localStorage.setItem('lovcuvSenSave', JSON.stringify(gameState));
+                console.log('💾 Game saved');
+            } catch (e) {
+                console.log('⚠️ Could not save game:', e);
+            }
+        }
+
+        function loadGame() {
+            try {
+                const saved = localStorage.getItem('lovcuvSenSave');
+                if (saved) {
+                    const loadedState = JSON.parse(saved);
+                    
+                    Object.keys(loadedState).forEach(key => {
+                        if (loadedState[key] !== undefined) {
+                            gameState[key] = loadedState[key];
+                        }
+                    });
+                    
+                    if (gameState.biggestWin === undefined) gameState.biggestWin = 0;
+                    if (gameState.totalWins === undefined) gameState.totalWins = 0;
+                    if (gameState.winStreak === undefined) gameState.winStreak = 0;
+                    if (gameState.maxWinStreak === undefined) gameState.maxWinStreak = 0;
+                    if (gameState.loseStreak === undefined) gameState.loseStreak = 0;
+                    if (gameState.maxLoseStreak === undefined) gameState.maxLoseStreak = 0;
+                    if (gameState.gameStartTime === undefined) gameState.gameStartTime = Date.now();
+                    if (gameState.pairs === undefined) gameState.pairs = 0;
+                    if (gameState.triples === undefined) gameState.triples = 0;
+                    if (gameState.playerExp === undefined) gameState.playerExp = 0;
+                    if (gameState.nextIncomeTime === undefined) gameState.nextIncomeTime = Date.now() + 60000;
+                    
+                    gameState.lastIncomeTime = Date.now();
+                    gameState.spinning = false;
+                    gameState.autoSpinning = false;
+                    
+                    console.log('📂 Game loaded with extended stats');
+                }
+            } catch (e) {
+                console.log('⚠️ Could not load game:', e);
+            }
+        }
+        
+        function setupEventListeners() {
+            document.getElementById('spinBtn').addEventListener('click', spin);
+            document.getElementById('autoSpinBtn').addEventListener('click', toggleAutoSpin);
+            
+            document.querySelectorAll('.quick-bet[data-bet]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const amount = parseInt(e.target.dataset.bet);
+                    setBet(amount);
+                });
+            });
+            
+            document.getElementById('maxBetBtn').addEventListener('click', maxBet);
+            
+            // Right panel business tabs
+            document.querySelectorAll('.tab-btn[data-tab]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const tab = e.target.dataset.tab;
+                    switchTab(tab);
+                });
+            });
+            
+            document.querySelectorAll('.loan-btn[data-loan]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const type = e.target.dataset.loan;
+                    takeLoan(type);
+                });
+            });
+            
+            document.getElementById('resetBtn').addEventListener('click', resetProgress);
+            document.getElementById('debugToggleBtn').addEventListener('click', toggleDebugPanel);
+            document.getElementById('testProgressBtn').addEventListener('click', simulateProgress);
+            document.getElementById('verifyResetBtn').addEventListener('click', verifyReset);
+            document.getElementById('quickResetBtn').addEventListener('click', quickReset);
+        }
+        
+        function initGame() {
+            document.addEventListener('click', function initAudioOnClick() {
+                initAudio();
+                document.removeEventListener('click', initAudioOnClick);
+            }, { once: true });
+            
+            loadGame();
+            calculatePassiveIncome();
+            populateBusinessList();
+            setupEventListeners();
+            
+            setInterval(updatePassiveIncome, 1000);
+            setInterval(saveGame, 30000);
+            
+            updateDisplay();
+            updateLevelDisplay();
+            document.getElementById('resultDisplay').textContent = '🎰 Připraveno k hře! 🎰';
+        }
+        
+        document.addEventListener('DOMContentLoaded', initGame);
+        window.addEventListener('beforeunload', saveGame);
+    </script>
+</body>
+</html>
+            
